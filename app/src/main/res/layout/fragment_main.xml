@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -71,7 +72,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_a" />
 
-    <com.artf.composeinview.ui.component.CounterView
+    <com.example.yandex_maps.ui.theme.component.CounterView
         android:id="@+id/counter_a"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -80,7 +81,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/score_label" />
 
-    <com.artf.composeinview.ui.component.CounterView
+    <com.example.yandex_maps.ui.theme.component.CounterView
         android:id="@+id/counter_b"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

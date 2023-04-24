@@ -14,7 +14,6 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.yandex_maps.ui.main.MainViewModel
 import com.example.yandex_maps.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
