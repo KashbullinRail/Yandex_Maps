@@ -6,7 +6,7 @@
     android:background="@color/white">
 
     <com.example.yandex_maps.ui.theme.component.YandexMapsView
-        android:id="@+id/counter_a"
+        android:id="@+id/ya_maps"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"

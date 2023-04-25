@@ -45,7 +45,7 @@ class BlankFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mapView =  binding.counterA.findViewById(R.id.mapview)
+        mapView =  binding.yaMaps.findViewById(R.id.mapview)
 
         mapView.getMap().move(
             CameraPosition(TARGET_LOCATION, 17.0f, 0.0f, 0.0f),
