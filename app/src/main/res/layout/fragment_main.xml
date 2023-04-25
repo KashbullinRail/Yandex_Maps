@@ -5,13 +5,9 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <com.example.yandex_maps.ui.theme.component.YandexMapsView
-        android:id="@+id/ya_maps"
+    <com.yandex.mapkit.mapview.MapView
+        android:id="@+id/mapview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent" />
+        android:layout_height="match_parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

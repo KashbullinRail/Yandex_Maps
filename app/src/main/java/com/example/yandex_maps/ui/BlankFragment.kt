@@ -29,8 +29,7 @@ class BlankFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        MapKitFactory.setApiKey("05ee083d-246d-421d-9956-0a76757d842a")
-        MapKitFactory.initialize(requireContext().applicationContext)
+            MapKitFactory.initialize(requireContext().applicationContext)
     }
 
     override fun onCreateView(
@@ -45,19 +44,18 @@ class BlankFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mapView =  binding.yaMaps.findViewById(R.id.mapview)
-
-        mapView.getMap().move(
-            CameraPosition(TARGET_LOCATION, 17.0f, 0.0f, 0.0f),
-            Animation(Animation.Type.SMOOTH, 5f),
-            null
-        )
+            mapView =  binding.mapview.findViewById(R.id.mapview)
+            mapView.getMap().move(
+                CameraPosition(TARGET_LOCATION, 17.0f, 0.0f, 0.0f),
+                Animation(Animation.Type.SMOOTH, 5f),
+                null
+            )
     }
 
     override fun onStop() {
-        super.onStop()
-        MapKitFactory.getInstance().onStop()
         mapView.onStop()
+        MapKitFactory.getInstance().onStop()
+        super.onStop()
     }
 
     override fun onStart() {
