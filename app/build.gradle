@@ -1,13 +1,6 @@
-//plugins {
-//    id 'com.android.application'
-//    id 'org.jetbrains.kotlin.android'
-//    id 'kotlin-kapt'
-//}
-
 buildscript {
     repositories {
         google()
-//        jcenter()
         mavenCentral()
     }
     dependencies {
@@ -17,6 +10,7 @@ buildscript {
 
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
+apply plugin: "kotlin-kapt"
 
 android {
     namespace 'com.example.yandex_maps'

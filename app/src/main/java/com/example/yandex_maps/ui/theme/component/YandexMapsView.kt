@@ -4,17 +4,19 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import com.example.yandex_maps.databinding.ComponentCounterBinding
+import com.example.yandex_maps.databinding.ComponentMapsBinding
 
 class YandexMapsView(
     context: Context,
     attrs: AttributeSet? = null
 ) : FrameLayout(context, attrs) {
 
-    var binding: ComponentCounterBinding
+    var binding: ComponentMapsBinding
 
     init {
-        binding = ComponentCounterBinding.inflate(LayoutInflater.from(context), this, true)
+        binding = ComponentMapsBinding.inflate(
+            LayoutInflater.from(context), this, true
+        )
     }
 
 }

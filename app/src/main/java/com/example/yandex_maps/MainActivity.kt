@@ -7,7 +7,6 @@ import androidx.compose.ui.viewinterop.AndroidViewBinding
 import com.example.yandex_maps.databinding.ActivityMainBinding
 import com.example.yandex_maps.ui.main.BlankFragment
 import com.example.yandex_maps.ui.theme.Yandex_MapsTheme
-import com.yandex.mapkit.MapKitFactory
 
 class MainActivity : AppCompatActivity() {
 
