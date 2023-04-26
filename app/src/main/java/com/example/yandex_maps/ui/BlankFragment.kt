@@ -43,6 +43,8 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
 
     private val TARGET_LOCATION = Point(55.763740752167465, 37.40582814075713)
     private val CAMERA_TARGET = Point(59.951029, 30.317181)
+//    private val ANIMATED_PLACEMARK_CENTER = Point(55.763482082898018, 37.405733146029167)
+    private val ANIMATED_PLACEMARK_CENTER = Point(55.763655369092997, 37.405195232228759)
     private val PERMISSIONS_REQUEST_FINE_LOCATION = 1
 
     private lateinit var mapView: MapView
@@ -50,6 +52,7 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
     private lateinit var sublayerManager: SublayerManager
     private lateinit var mapObjects: MapObjectCollection
     private lateinit var mapObjects2: MapObjectCollection
+    private lateinit var mapObjects3: MapObjectCollection
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,10 +106,11 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
 
         binding.fabPointsArray.setOnClickListener {
             mapView.map.move(
-                CameraPosition(TARGET_LOCATION, 16.0f, 0.0f, 45.0f)
+                CameraPosition(TARGET_LOCATION, 15.0f, 0.0f, 0.0f)
             )
             sublayerManager = mapView.map.sublayerManager
             mapObjects2 = mapView.map.mapObjects
+            mapObjects3 = mapView.map.mapObjects
 
             val points = java.util.ArrayList<Point>()
             points.add(Point(55.76404161831339, 37.40583506997173))
@@ -118,6 +122,17 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
             points.add(Point(55.76342462108786, 37.40482655938213))
             points.add(Point(55.763938786129667, 37.405234255152389))
             points.add(Point(55.76404161831339, 37.40583506997173))
+
+            val p = java.util.ArrayList<PointF>()
+            p.add(PointF(55.76f, 37.40f))
+            p.add(PointF(55.76f, 37.40f))
+            p.add(PointF(55.763f, 37.40f))
+            p.add(PointF(55.763f, 37.4f))
+            p.add(PointF(55.762f, 37.40f))
+            p.add(PointF(55.763f, 37.40f))
+            p.add(PointF(55.763f, 37.40f))
+            p.add(PointF(55.763f, 37.40f))
+            p.add(PointF(55.764f, 37.40f))
 
             val pointsInnner = java.util.ArrayList<Point>()
             pointsInnner.add(Point(55.76339840848991, 37.406039513921459))
@@ -139,10 +154,19 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
             val innerRing = java.util.ArrayList<LinearRing>()
             innerRing.add(LinearRing(pointsInnner))
             innerRing.add(LinearRing(pointsInnner2))
+//
+//            val imageProvider = ImageProvider.fromAsset(requireContext(), "img.png")
+//            mapObjects3.addPlacemark(ANIMATED_PLACEMARK_CENTER, imageProvider)
+
+            val mark = mapObjects2.addPlacemark(ANIMATED_PLACEMARK_CENTER)
+            mark.opacity = 0.5f
+            mark.setIcon(ImageProvider.fromResource(requireContext(), R.drawable.img))
+            mark.isDraggable = true
+//            mark.setScaleFunction(p)
+
 
             val polygon = Polygon(LinearRing(points), innerRing)
             val polygonMapObject2 = mapObjects2.addPolygon(polygon)
-            polygonMapObject2.geometry.innerRings
 
             polygonMapObject2.fillColor = 0x3300FF00
             polygonMapObject2.strokeWidth = 3.0f
@@ -177,7 +201,18 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
             userLocationLayer.setObjectListener(this)
         }
 
+//        binding.fabPointsArray.setOnClickListener {
+//           createAnimatedPlacemark()
+//        }
+
     }
+
+//    fun createAnimatedPlacemark() {
+//        val imageProvider = AnimatedImageProvider.fromAsset(requireContext(), "img.png")
+//        val animatedPlacemark =
+//            mapObjects.addPlacemark(ANIMATED_PLACEMARK_CENTER, imageProvider, IconStyle())
+//        animatedPlacemark.useAnimation().play()
+//    }
 
     private fun requestLocationPermission() {
         if (ContextCompat.checkSelfPermission(
