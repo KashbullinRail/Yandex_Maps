@@ -20,6 +20,7 @@ import com.yandex.mapkit.geometry.Circle
 import com.yandex.mapkit.geometry.LinearRing
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.geometry.Polygon
+import com.yandex.mapkit.images.ImageUrlProvider
 import com.yandex.mapkit.layers.GeoObjectTapEvent
 import com.yandex.mapkit.layers.GeoObjectTapListener
 import com.yandex.mapkit.layers.ObjectEvent
@@ -53,6 +54,7 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
     private lateinit var mapObjects: MapObjectCollection
     private lateinit var mapObjects2: MapObjectCollection
     private lateinit var mapObjects3: MapObjectCollection
+    private lateinit var uri: ImageUrlProvider
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -150,6 +152,14 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
             pointsInnner2.add(Point(55.76354951136957, 37.405189867810729))
             pointsInnner2.add(Point(55.763655369092997, 37.405195232228759))
 
+//           val image =  uri.formatUrl("https://profitland-satellite-img.agrotek.com:44381/maps/ndvi/20230416/1268beff-9aaa-47fb-a11f-9117d14eba3d.png")
+
+//            uri = ImageUrlProvider { desc ->
+//                String.format(
+//                    "https://profitland-satellite-img.agrotek.com:44381/maps/ndvi/20230416/1268beff-9aaa-47fb-a11f-9117d14eba3d.png",
+//                    desc.imageId
+//                )
+//            }
 
             val innerRing = java.util.ArrayList<LinearRing>()
             innerRing.add(LinearRing(pointsInnner))
@@ -160,7 +170,16 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
 
             val mark = mapObjects2.addPlacemark(ANIMATED_PLACEMARK_CENTER)
             mark.opacity = 0.5f
-            mark.setIcon(ImageProvider.fromResource(requireContext(), R.drawable.img))
+//            mark.setIcon(ImageProvider.fromResource(requireContext(), R.drawable.img))
+            mark.setIcon(
+                ImageProvider.fromResource(requireContext(), R.drawable.img),
+                IconStyle().setAnchor(PointF(0f, 0f))
+                    .setRotationType(RotationType.ROTATE)
+                    .setZIndex(0f)
+                    .setScale(1f)
+            )
+//            mark.setIcon(ImageProvider.fromFile(uri))
+//            mark.setIcon(ImageProvider.fromFile(uri))
             mark.isDraggable = true
 //            mark.setScaleFunction(p)
 
