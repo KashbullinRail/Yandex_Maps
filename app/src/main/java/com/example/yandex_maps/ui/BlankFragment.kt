@@ -16,17 +16,20 @@ import com.example.yandex_maps.R
 import com.example.yandex_maps.databinding.FragmentMainBinding
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
+import com.yandex.mapkit.TileId
+import com.yandex.mapkit.Version
 import com.yandex.mapkit.geometry.Circle
 import com.yandex.mapkit.geometry.LinearRing
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.geometry.Polygon
-import com.yandex.mapkit.images.ImageUrlProvider
-import com.yandex.mapkit.layers.GeoObjectTapEvent
-import com.yandex.mapkit.layers.GeoObjectTapListener
-import com.yandex.mapkit.layers.ObjectEvent
+import com.yandex.mapkit.geometry.geo.Projection
+import com.yandex.mapkit.geometry.geo.Projections
+import com.yandex.mapkit.images.DefaultImageUrlProvider
+import com.yandex.mapkit.layers.*
 import com.yandex.mapkit.map.*
 import com.yandex.mapkit.map.Map
 import com.yandex.mapkit.mapview.MapView
+import com.yandex.mapkit.tiles.UrlProvider
 import com.yandex.mapkit.user_location.UserLocationLayer
 import com.yandex.mapkit.user_location.UserLocationObjectListener
 import com.yandex.mapkit.user_location.UserLocationView
@@ -45,7 +48,7 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
     private val TARGET_LOCATION = Point(55.763740752167465, 37.40582814075713)
     private val CAMERA_TARGET = Point(59.951029, 30.317181)
 //    private val ANIMATED_PLACEMARK_CENTER = Point(55.763482082898018, 37.405733146029167)
-    private val ANIMATED_PLACEMARK_CENTER = Point(55.763655369092997, 37.405195232228759)
+    private val ANIMATED_PLACEMARK_CENTER = Point(55.763482082898018, 37.405733146029167)
     private val PERMISSIONS_REQUEST_FINE_LOCATION = 1
 
     private lateinit var mapView: MapView
@@ -54,7 +57,9 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
     private lateinit var mapObjects: MapObjectCollection
     private lateinit var mapObjects2: MapObjectCollection
     private lateinit var mapObjects3: MapObjectCollection
-    private lateinit var uri: ImageUrlProvider
+    private lateinit var urlProvider: UrlProvider
+    private lateinit var imageUrlProvider: DefaultImageUrlProvider
+    private lateinit var projection: Projection
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +81,8 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
         super.onViewCreated(view, savedInstanceState)
 
         mapView = binding.mapview.findViewById(R.id.mapview)
+
+        mapView.map.mapType = MapType.VECTOR_MAP
 
         mapView.map.addTapListener(this)
         mapView.map.addInputListener(this)
@@ -168,23 +175,51 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
 //            val imageProvider = ImageProvider.fromAsset(requireContext(), "img.png")
 //            mapObjects3.addPlacemark(ANIMATED_PLACEMARK_CENTER, imageProvider)
 
-            val mark = mapObjects2.addPlacemark(ANIMATED_PLACEMARK_CENTER)
+            var mapScale = mapView.scaleFactor
+
+           /* val mark = mapObjects2.addPlacemark(ANIMATED_PLACEMARK_CENTER)
             mark.opacity = 0.5f
 //            mark.setIcon(ImageProvider.fromResource(requireContext(), R.drawable.img))
             mark.setIcon(
                 ImageProvider.fromResource(requireContext(), R.drawable.img),
-                IconStyle().setAnchor(PointF(0f, 0f))
+                IconStyle().setAnchor(PointF(0.5f, 0.5f))
                     .setRotationType(RotationType.ROTATE)
                     .setZIndex(0f)
                     .setScale(1f)
             )
 //            mark.setIcon(ImageProvider.fromFile(uri))
 //            mark.setIcon(ImageProvider.fromFile(uri))
-            mark.isDraggable = true
+            mark.isDraggable = true*/
 //            mark.setScaleFunction(p)
+
+//            urlProvider =
+//                UrlProvider { tileId: TileId?, version: Version? -> "https://profitland-satellite-img.agrotek.com:44381/maps/ndvi/20230416/1268beff-9aaa-47fb-a11f-9117d14eba3d.png" }
+//            imageUrlProvider = DefaultImageUrlProvider()
+//            projection = Projections.getWgs84Mercator()
+//
+//            mapView.map.mapType = MapType.NONE
+//            val l: Layer = mapView.map.addLayer(
+//                "mapkit_logo",
+//                "image/png",
+//                LayerOptions(),
+//                urlProvider,
+//                imageUrlProvider,
+//                projection
+//            )
+//            l.invalidate("0.0.0")
 
 
             val polygon = Polygon(LinearRing(points), innerRing)
+            val mark = mapObjects2.addPlacemark(ANIMATED_PLACEMARK_CENTER)
+            mark.opacity = 0.5f
+//            mark.setIcon(ImageProvider.fromResource(requireContext(), R.drawable.img))
+            mark.setIcon(
+                ImageProvider.fromResource(requireContext(), R.drawable.img),
+                IconStyle().setAnchor(PointF(0.5f, 0.5f))
+                    .setRotationType(RotationType.ROTATE)
+                    .setZIndex(0f)
+                    .setScale(0.5f)
+            )
             val polygonMapObject2 = mapObjects2.addPolygon(polygon)
 
             polygonMapObject2.fillColor = 0x3300FF00
