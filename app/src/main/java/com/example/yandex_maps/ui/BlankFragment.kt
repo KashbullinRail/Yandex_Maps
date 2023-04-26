@@ -49,6 +49,7 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
     private lateinit var userLocationLayer: UserLocationLayer
     private lateinit var sublayerManager: SublayerManager
     private lateinit var mapObjects: MapObjectCollection
+    private lateinit var mapObjects2: MapObjectCollection
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,6 +101,54 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
             polygonMapObject.strokeColor = Color.CYAN
         }
 
+        binding.fabPointsArray.setOnClickListener {
+            mapView.map.move(
+                CameraPosition(TARGET_LOCATION, 16.0f, 0.0f, 45.0f)
+            )
+            sublayerManager = mapView.map.sublayerManager
+            mapObjects2 = mapView.map.mapObjects
+
+            val points = java.util.ArrayList<Point>()
+            points.add(Point(55.76404161831339, 37.40583506997173))
+            points.add(Point(55.76400532463667, 37.40651098664349))
+            points.add(Point(55.76369077795631, 37.40607646878304))
+            points.add(Point(55.76308587335008, 37.4066397326762))
+            points.add(Point(55.76292254748264, 37.40643588479104))
+            points.add(Point(55.7630314314727, 37.405330814676947))
+            points.add(Point(55.76342462108786, 37.40482655938213))
+            points.add(Point(55.763938786129667, 37.405234255152389))
+            points.add(Point(55.76404161831339, 37.40583506997173))
+
+            val pointsInnner = java.util.ArrayList<Point>()
+            pointsInnner.add(Point(55.76339840848991, 37.406039513921459))
+            pointsInnner.add(Point(55.76333640572745, 37.40588931021659))
+            pointsInnner.add(Point(55.76327440287852, 37.40599659857722))
+            pointsInnner.add(Point(55.76330162365641, 37.40614680228206))
+            pointsInnner.add(Point(55.76337118777988, 37.40620044646235))
+            pointsInnner.add(Point(55.76343470274027, 37.40621653971645))
+            pointsInnner.add(Point(55.76346797243996, 37.406130709027987))
+            pointsInnner.add(Point(55.76339840848991, 37.406039513921459))
+
+            val pointsInnner2 = java.util.ArrayList<Point>()
+            pointsInnner2.add(Point(55.763655369092997, 37.405195232228759))
+            pointsInnner2.add(Point(55.763495070142287, 37.405098672704209))
+            pointsInnner2.add(Point(55.76354951136957, 37.405189867810729))
+            pointsInnner2.add(Point(55.763655369092997, 37.405195232228759))
+
+
+            val innerRing = java.util.ArrayList<LinearRing>()
+            innerRing.add(LinearRing(pointsInnner))
+            innerRing.add(LinearRing(pointsInnner2))
+
+            val polygon = Polygon(LinearRing(points), innerRing)
+            val polygonMapObject2 = mapObjects2.addPolygon(polygon)
+            polygonMapObject2.geometry.innerRings
+
+            polygonMapObject2.fillColor = 0x3300FF00
+            polygonMapObject2.strokeWidth = 3.0f
+            polygonMapObject2.strokeColor = Color.GREEN
+        }
+
         binding.fabStartPoint.setOnClickListener {
             mapView.getMap().move(
                 CameraPosition(TARGET_LOCATION, 17.0f, 0.0f, 0.0f),
@@ -127,7 +176,6 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
 
             userLocationLayer.setObjectListener(this)
         }
-
 
     }
 
