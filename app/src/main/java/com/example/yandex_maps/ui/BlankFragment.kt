@@ -56,7 +56,8 @@ import com.yandex.runtime.network.NetworkError
 import com.yandex.runtime.network.RemoteError
 
 
-class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListener, InputListener, DrivingSession.DrivingRouteListener {
+class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListener,
+    InputListener, DrivingSession.DrivingRouteListener {  //TODO TODO TODO TODO
 
     private val viewModel by lazy {
         ViewModelProvider(this)[MainViewModel::class.java]
@@ -295,14 +296,8 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
                 null
             )
         )
-        mapObjectsDriving.addPlacemark(
-            ROUTE_START_LOCATION,
-            ImageProvider.fromResource(requireContext(), R.drawable.img),
-            IconStyle().setAnchor(PointF(0.5f, 0.5f))
-                .setRotationType(RotationType.ROTATE)
-                .setZIndex(0f)
-                .setScale(0.5f)
-        )
+        addPlacemark(ROUTE_START_LOCATION)
+
         requestPoints.add(
             RequestPoint(
                 ROUTE_START_MIDDLE_LOCATION,
@@ -310,14 +305,8 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
                 null
             )
         )
-        mapObjectsDriving.addPlacemark(
-            ROUTE_START_MIDDLE_LOCATION,
-            ImageProvider.fromResource(requireContext(), R.drawable.img),
-            IconStyle().setAnchor(PointF(0.5f, 0.5f))
-                .setRotationType(RotationType.ROTATE)
-                .setZIndex(0f)
-                .setScale(0.5f)
-        )
+        addPlacemark(ROUTE_START_MIDDLE_LOCATION)
+//
         requestPoints.add(
             RequestPoint(
                 ROUTE_END_LOCATION,
@@ -325,16 +314,22 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
                 null
             )
         )
+        addPlacemark(ROUTE_END_LOCATION)
+
+        drivingSession =
+            drivingRouter.requestRoutes(requestPoints, drivingOptions, vehicleOptions, this)
+    }
+
+
+    private fun addPlacemark(point: Point) {   //TODO TODO TODO TODO
         mapObjectsDriving.addPlacemark(
-            ROUTE_END_LOCATION,
+            point,
             ImageProvider.fromResource(requireContext(), R.drawable.img),
             IconStyle().setAnchor(PointF(0.5f, 0.5f))
                 .setRotationType(RotationType.ROTATE)
                 .setZIndex(0f)
                 .setScale(0.5f)
         )
-        drivingSession =
-            drivingRouter.requestRoutes(requestPoints, drivingOptions, vehicleOptions, this)
     }
 
 
