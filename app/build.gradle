@@ -75,6 +75,7 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
 
-    implementation 'com.yandex.android:maps.mobile:4.3.1-lite'
+//    implementation 'com.yandex.android:maps.mobile:4.3.1-lite'
     implementation 'com.google.android.gms:play-services-location:20.0.0'
+    implementation 'com.yandex.android:maps.mobile:4.3.2-full'
 }

@@ -4,6 +4,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PointF
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,27 +17,46 @@ import com.example.yandex_maps.R
 import com.example.yandex_maps.databinding.FragmentMainBinding
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
+import com.yandex.mapkit.RequestPoint
+import com.yandex.mapkit.RequestPointType
+import com.yandex.mapkit.directions.DirectionsFactory
+import com.yandex.mapkit.directions.driving.DrivingOptions
+import com.yandex.mapkit.directions.driving.DrivingRoute
+import com.yandex.mapkit.directions.driving.DrivingRouter
+import com.yandex.mapkit.directions.driving.DrivingSession
+import com.yandex.mapkit.directions.driving.VehicleOptions
 import com.yandex.mapkit.geometry.Circle
 import com.yandex.mapkit.geometry.LinearRing
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.geometry.Polygon
 import com.yandex.mapkit.geometry.geo.Projection
 import com.yandex.mapkit.images.DefaultImageUrlProvider
-import com.yandex.mapkit.images.ImageUrlProvider
 import com.yandex.mapkit.layers.GeoObjectTapEvent
 import com.yandex.mapkit.layers.GeoObjectTapListener
-import com.yandex.mapkit.layers.LayerOptions
 import com.yandex.mapkit.layers.ObjectEvent
-import com.yandex.mapkit.map.*
+import com.yandex.mapkit.map.CameraPosition
+import com.yandex.mapkit.map.CompositeIcon
+import com.yandex.mapkit.map.GeoObjectSelectionMetadata
+import com.yandex.mapkit.map.IconStyle
+import com.yandex.mapkit.map.InputListener
 import com.yandex.mapkit.map.Map
+import com.yandex.mapkit.map.MapObjectCollection
+import com.yandex.mapkit.map.MapType
+import com.yandex.mapkit.map.PolygonMapObject
+import com.yandex.mapkit.map.RotationType
+import com.yandex.mapkit.map.SublayerManager
 import com.yandex.mapkit.mapview.MapView
 import com.yandex.mapkit.tiles.UrlProvider
 import com.yandex.mapkit.user_location.UserLocationLayer
 import com.yandex.mapkit.user_location.UserLocationObjectListener
 import com.yandex.mapkit.user_location.UserLocationView
+import com.yandex.runtime.Error
 import com.yandex.runtime.image.ImageProvider
+import com.yandex.runtime.network.NetworkError
+import com.yandex.runtime.network.RemoteError
 
-class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListener, InputListener {
+
+class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListener, InputListener, DrivingSession.DrivingRouteListener {
 
     private val viewModel by lazy {
         ViewModelProvider(this)[MainViewModel::class.java]
@@ -60,11 +80,24 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
     private lateinit var imageUrlProvider: DefaultImageUrlProvider
     private lateinit var projection: Projection
 
+    // TODO TODO TODO TODO
+    val ROUTE_START_LOCATION = Point(59.959194, 30.407094)
+    val ROUTE_START_MIDDLE_LOCATION = Point(58.959194, 34.407094)
+    val ROUTE_END_LOCATION = Point(55.733330, 37.587649)
+    val SCREEN_CENTER = Point(
+        (ROUTE_START_LOCATION.latitude + ROUTE_END_LOCATION.latitude) / 2,
+        (ROUTE_START_LOCATION.longitude + ROUTE_END_LOCATION.longitude) / 2
+    )
+    private lateinit var mapObjectsDriving: MapObjectCollection
+    private lateinit var drivingRouter: DrivingRouter
+    private lateinit var drivingSession: DrivingSession
+    // TODO TODO TODO TODO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         MapKitFactory.initialize(requireContext().applicationContext)
+        DirectionsFactory.initialize(requireContext().applicationContext)  //TODO TODO TODO TODO
     }
 
     override fun onCreateView(
@@ -81,10 +114,12 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
 
         mapView = binding.mapview.findViewById(R.id.mapview)
 
-        mapView.map.mapType = MapType.VECTOR_MAP
+        mapView.map.mapType = MapType.MAP
 
         mapView.map.addTapListener(this)
         mapView.map.addInputListener(this)
+
+//        mapObjectsDriving = mapView.map.mapObjects.addCollection()
 
         binding.fabPoligons.setOnClickListener {
             mapView.map.move(
@@ -180,13 +215,16 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
             polygonMapObject2.strokeColor = Color.GREEN
         }
 
-        binding.fabStartPoint.setOnClickListener {
+        binding.fabStartPoint.setOnClickListener {  //TODO TODO TODO TODO
             mapView.getMap().move(
-                CameraPosition(TARGET_LOCATION, 17.0f, 0.0f, 0.0f),
-                Animation(Animation.Type.SMOOTH, 5f),
+                CameraPosition(SCREEN_CENTER, 5.0f, 0.0f, 0.0f),
+                Animation(Animation.Type.SMOOTH, 0f),
                 null
             )
-        }
+            drivingRouter = DirectionsFactory.getInstance().createDrivingRouter()
+            mapObjectsDriving = mapView.map.mapObjects.addCollection()
+            submitRequest()
+        }  //TODO TODO TODO TODO
 
         binding.fabUserLocation.setOnClickListener {
             mapView.map.isRotateGesturesEnabled = false
@@ -213,6 +251,7 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
 //        }
 
     }
+
     private fun requestLocationPermission() {
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
@@ -227,6 +266,77 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
             )
         }
     }
+
+    override fun onDrivingRoutes(routes: List<DrivingRoute>) {  //TODO TODO TODO TODO
+        for (route in routes) {
+            mapObjectsDriving.addPolyline(route.geometry)
+        }
+    }
+
+    override fun onDrivingRoutesError(p0: Error) {   //TODO TODO TODO TODO
+        var errorMessage = "Неизвестная ошибка"
+        if (p0 is RemoteError) {
+            errorMessage = "Ошибка на сервере Яндекс"
+        } else if (p0 is NetworkError) {
+            errorMessage = "Ошибка интернет соединения"
+        }
+
+        Log.d("RouteError", "Error = $errorMessage")
+    }
+
+    private fun submitRequest() {    //TODO TODO TODO TODO
+        val drivingOptions = DrivingOptions()
+        val vehicleOptions = VehicleOptions()
+        val requestPoints = java.util.ArrayList<RequestPoint>()
+        requestPoints.add(
+            RequestPoint(
+                ROUTE_START_LOCATION,
+                RequestPointType.WAYPOINT,
+                null
+            )
+        )
+        mapObjectsDriving.addPlacemark(
+            ROUTE_START_LOCATION,
+            ImageProvider.fromResource(requireContext(), R.drawable.img),
+            IconStyle().setAnchor(PointF(0.5f, 0.5f))
+                .setRotationType(RotationType.ROTATE)
+                .setZIndex(0f)
+                .setScale(0.5f)
+        )
+        requestPoints.add(
+            RequestPoint(
+                ROUTE_START_MIDDLE_LOCATION,
+                RequestPointType.WAYPOINT,
+                null
+            )
+        )
+        mapObjectsDriving.addPlacemark(
+            ROUTE_START_MIDDLE_LOCATION,
+            ImageProvider.fromResource(requireContext(), R.drawable.img),
+            IconStyle().setAnchor(PointF(0.5f, 0.5f))
+                .setRotationType(RotationType.ROTATE)
+                .setZIndex(0f)
+                .setScale(0.5f)
+        )
+        requestPoints.add(
+            RequestPoint(
+                ROUTE_END_LOCATION,
+                RequestPointType.WAYPOINT,
+                null
+            )
+        )
+        mapObjectsDriving.addPlacemark(
+            ROUTE_END_LOCATION,
+            ImageProvider.fromResource(requireContext(), R.drawable.img),
+            IconStyle().setAnchor(PointF(0.5f, 0.5f))
+                .setRotationType(RotationType.ROTATE)
+                .setZIndex(0f)
+                .setScale(0.5f)
+        )
+        drivingSession =
+            drivingRouter.requestRoutes(requestPoints, drivingOptions, vehicleOptions, this)
+    }
+
 
     override fun onStop() {
         mapView.onStop()

@@ -5,7 +5,8 @@ import com.yandex.mapkit.MapKitFactory
 
 class App : Application() {
 
-    private val MAPKIT_API_KEY = "05ee083d-246d-421d-9956-0a76757d842a"
+    //    private val MAPKIT_API_KEY = "05ee083d-246d-421d-9956-0a76757d842a"
+    val MAPKIT_API_KEY = "bba4f318-e183-4f6e-8124-c335f1abca8a"   // Коммерческий ключ
 
     override fun onCreate() {
         super.onCreate()
