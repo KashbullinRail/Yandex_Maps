@@ -19,6 +19,8 @@ import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.RequestPoint
 import com.yandex.mapkit.RequestPointType
+import com.yandex.mapkit.TileId
+import com.yandex.mapkit.Version
 import com.yandex.mapkit.directions.DirectionsFactory
 import com.yandex.mapkit.directions.driving.DrivingOptions
 import com.yandex.mapkit.directions.driving.DrivingRoute
@@ -30,9 +32,11 @@ import com.yandex.mapkit.geometry.LinearRing
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.geometry.Polygon
 import com.yandex.mapkit.geometry.geo.Projection
+import com.yandex.mapkit.geometry.geo.Projections
 import com.yandex.mapkit.images.DefaultImageUrlProvider
 import com.yandex.mapkit.layers.GeoObjectTapEvent
 import com.yandex.mapkit.layers.GeoObjectTapListener
+import com.yandex.mapkit.layers.LayerOptions
 import com.yandex.mapkit.layers.ObjectEvent
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.CompositeIcon
@@ -57,7 +61,7 @@ import com.yandex.runtime.network.RemoteError
 
 
 class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListener,
-    InputListener, DrivingSession.DrivingRouteListener {  //TODO TODO TODO TODO
+    InputListener, DrivingSession.DrivingRouteListener {  //TODO DrivingRoutes
 
     private val viewModel by lazy {
         ViewModelProvider(this)[MainViewModel::class.java]
@@ -77,11 +81,15 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
     private lateinit var sublayerManager: SublayerManager
     private lateinit var mapObjects: MapObjectCollection
     private lateinit var mapObjects2: MapObjectCollection
+
+    // TODO TILES
     private lateinit var urlProvider: UrlProvider
     private lateinit var imageUrlProvider: DefaultImageUrlProvider
     private lateinit var projection: Projection
+    // TODO TILES
 
-    // TODO TODO TODO TODO
+
+    //TODO DrivingRoutes
     val ROUTE_START_LOCATION = Point(59.959194, 30.407094)
     val ROUTE_START_MIDDLE_LOCATION = Point(58.959194, 34.407094)
     val ROUTE_END_LOCATION = Point(55.733330, 37.587649)
@@ -92,13 +100,13 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
     private lateinit var mapObjectsDriving: MapObjectCollection
     private lateinit var drivingRouter: DrivingRouter
     private lateinit var drivingSession: DrivingSession
-    // TODO TODO TODO TODO
+    //TODO DrivingRoutes
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         MapKitFactory.initialize(requireContext().applicationContext)
-        DirectionsFactory.initialize(requireContext().applicationContext)  //TODO TODO TODO TODO
+        DirectionsFactory.initialize(requireContext().applicationContext)  //TODO DrivingRoutes
     }
 
     override fun onCreateView(
@@ -115,7 +123,7 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
 
         mapView = binding.mapview.findViewById(R.id.mapview)
 
-        mapView.map.mapType = MapType.MAP
+//        mapView.map.mapType = MapType.MAP
 
         mapView.map.addTapListener(this)
         mapView.map.addInputListener(this)
@@ -123,6 +131,49 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
 //        mapObjectsDriving = mapView.map.mapObjects.addCollection()
 
         binding.fabPoligons.setOnClickListener {
+
+            // TODO TILES
+            urlProvider =
+//                UrlProvider { tileId: TileId?, version: Version? -> "https://maps-ios-pods-public.s3.yandex.net/mapkit_logo.png" }
+
+
+//                UrlProvider { tileId: TileId?, version: Version? ->
+//                    "https://api.mapbox.com/styles/v1/mapbox/dark-v11/static/pin-l-embassy+f74e4e(-74.0021,40.7338)/-74.0021,40.7338,16/500x300?" +
+//                            "access_token=pk.eyJ1Ijoia2FzaGJ1bGxpbiIsImEiOiJjbGp3azVuZ20wcWRvM2ZxaW1qYjFvcTd5In0.u77khkgQF4Zr4fnSA_tF2g" }   // TODO
+//
+            UrlProvider { tileId: TileId?, version: Version? ->
+                "https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/37.4171,55.7594,11.27,0/300x200?" +
+                        "access_token=pk.eyJ1Ijoia2FzaGJ1bGxpbiIsImEiOiJjbGp3azVuZ20wcWRvM2ZxaW1qYjFvcTd5In0.u77khkgQF4Zr4fnSA_tF2g" }   // TODO  MapKit работает с PNG
+//
+//
+//            UrlProvider { tileId: TileId?, version: Version? ->
+//                "https://api.mapbox.com/v4/mapbox.satellite/1/0/0@2x.jpg90?" +
+//                        "access_token=pk.eyJ1Ijoia2FzaGJ1bGxpbiIsImEiOiJjbGp3azVuZ20wcWRvM2ZxaW1qYjFvcTd5In0.u77khkgQF4Zr4fnSA_tF2g" }
+
+
+//                UrlProvider { tileId: TileId?, version: Version? ->
+//                    "https://api.mapbox.com/tilesets/v1/sources/kashbullin?" +
+//                            "access_token=pk.eyJ1Ijoia2FzaGJ1bGxpbiIsImEiOiJjbGp3azVuZ20wcWRvM2ZxaW1qYjFvcTd5In0.u77khkgQF4Zr4fnSA_tF2g" }
+//                UrlProvider { tileId: TileId?, version: Version? ->
+//                        "https://api.mapbox.com/v4/mapbox.satellite/1/0/0@2x.png?" +
+//                        "access_token=pk.eyJ1Ijoia2FzaGJ1bGxpbiIsImEiOiJjbGp3azVuZ20wcWRvM2ZxaW1qYjFvcTd5In0.u77khkgQF4Zr4fnSA_tF2g" }
+            imageUrlProvider = DefaultImageUrlProvider()
+            projection = Projections.getWgs84Mercator()
+
+            mapView.map.mapType = MapType.NONE
+
+            val l = mapView.map.addLayer(
+                "mapkit_logo",
+                "image/png",
+                LayerOptions(),
+                urlProvider,
+                imageUrlProvider,
+                projection
+            )
+            l.invalidate("0.0.0")
+            // TODO TILES
+
+
             mapView.map.move(
                 CameraPosition(TARGET_LOCATION, 16.0f, 0.0f, 45.0f)
             )
@@ -216,7 +267,7 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
             polygonMapObject2.strokeColor = Color.GREEN
         }
 
-        binding.fabStartPoint.setOnClickListener {  //TODO TODO TODO TODO
+        binding.fabStartPoint.setOnClickListener {  //TODO DrivingRoutes
             mapView.getMap().move(
                 CameraPosition(SCREEN_CENTER, 5.0f, 0.0f, 0.0f),
                 Animation(Animation.Type.SMOOTH, 0f),
@@ -225,7 +276,7 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
             drivingRouter = DirectionsFactory.getInstance().createDrivingRouter()
             mapObjectsDriving = mapView.map.mapObjects.addCollection()
             submitRequest()
-        }  //TODO TODO TODO TODO
+        }  //TODO DrivingRoutes
 
         binding.fabUserLocation.setOnClickListener {
             mapView.map.isRotateGesturesEnabled = false
@@ -268,13 +319,13 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
         }
     }
 
-    override fun onDrivingRoutes(routes: List<DrivingRoute>) {  //TODO TODO TODO TODO
+    override fun onDrivingRoutes(routes: List<DrivingRoute>) {  //TODO DrivingRoutes
         for (route in routes) {
             mapObjectsDriving.addPolyline(route.geometry)
         }
     }
 
-    override fun onDrivingRoutesError(p0: Error) {   //TODO TODO TODO TODO
+    override fun onDrivingRoutesError(p0: Error) {   //TODO DrivingRoutes
         var errorMessage = "Неизвестная ошибка"
         if (p0 is RemoteError) {
             errorMessage = "Ошибка на сервере Яндекс"
@@ -285,7 +336,7 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
         Log.d("RouteError", "Error = $errorMessage")
     }
 
-    private fun submitRequest() {    //TODO TODO TODO TODO
+    private fun submitRequest() {    //TODO DrivingRoutes
         val drivingOptions = DrivingOptions()
         val vehicleOptions = VehicleOptions()
         val requestPoints = java.util.ArrayList<RequestPoint>()
@@ -321,7 +372,7 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
     }
 
 
-    private fun addPlacemark(point: Point) {   //TODO TODO TODO TODO
+    private fun addPlacemark(point: Point) {   //TODO DrivingRoutes
         mapObjectsDriving.addPlacemark(
             point,
             ImageProvider.fromResource(requireContext(), R.drawable.img),
