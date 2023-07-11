@@ -146,10 +146,10 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
 //                        "access_token=pk.eyJ1Ijoia2FzaGJ1bGxpbiIsImEiOiJjbGp3azVuZ20wcWRvM2ZxaW1qYjFvcTd5In0.u77khkgQF4Zr4fnSA_tF2g" }   // TODO  MapKit работает с PNG
 ////
 
-            UrlProvider { tileId: TileId?, version: Version? ->
-                "https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/-122.4241,37.78,15.25,0,60/400x400?" +
-                        "access_token=pk.eyJ1Ijoia2FzaGJ1bGxpbiIsImEiOiJjbGp3azVuZ20wcWRvM2ZxaW1qYjFvcTd5In0.u77khkgQF4Zr4fnSA_tF2g" }
-//
+//            UrlProvider { tileId: TileId?, version: Version? ->
+//                "https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/-122.4241,37.78,15.25,0,60/400x400?" +
+//                        "access_token=pk.eyJ1Ijoia2FzaGJ1bGxpbiIsImEiOiJjbGp3azVuZ20wcWRvM2ZxaW1qYjFvcTd5In0.u77khkgQF4Zr4fnSA_tF2g" }
+////
 //            UrlProvider { tileId: TileId?, version: Version? ->
 //                "https://api.mapbox.com/v4/mapbox.satellite/1/0/0@2x.jpg90?" +
 //                        "access_token=pk.eyJ1Ijoia2FzaGJ1bGxpbiIsImEiOiJjbGp3azVuZ20wcWRvM2ZxaW1qYjFvcTd5In0.u77khkgQF4Zr4fnSA_tF2g" }
@@ -161,6 +161,12 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
 //                UrlProvider { tileId: TileId?, version: Version? ->
 //                        "https://api.mapbox.com/v4/mapbox.satellite/1/0/0@2x.png?" +
 //                        "access_token=pk.eyJ1Ijoia2FzaGJ1bGxpbiIsImEiOiJjbGp3azVuZ20wcWRvM2ZxaW1qYjFvcTd5In0.u77khkgQF4Zr4fnSA_tF2g" }
+
+            UrlProvider { tileId: TileId?, version: Version? ->
+                val result = "https://api.mapbox.com/v4/mapbox.satellite/${tileId?.z}/${tileId?.x}/${tileId?.y}@2x.png256?access_token=pk.eyJ1Ijoia2FzaGJ1bGxpbiIsImEiOiJjbGp3azVuZ20wcWRvM2ZxaW1qYjFvcTd5In0.u77khkgQF4Zr4fnSA_tF2g"
+                Log.d("urlPeovider", result)
+                result }
+
             imageUrlProvider = DefaultImageUrlProvider()
             projection = Projections.getWgs84Mercator()
 
