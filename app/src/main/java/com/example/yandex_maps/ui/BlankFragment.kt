@@ -134,8 +134,41 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
 
             // TODO TILES
             urlProvider =
-//                UrlProvider { tileId: TileId?, version: Version? -> "https://maps-ios-pods-public.s3.yandex.net/mapkit_logo.png" }
+//                UrlProvider { tileId: TileId?, version: Version? -> "https://core-sat.maps.yandex.net/tiles?/l=sat&${tileId?.x}&y=${tileId?.y}&z=${tileId?.z}&lang=ru_RU&apikey=bba4f318-e183-4f6e-8124-c335f1abca8a" }
+//
+//                UrlProvider { tileId: TileId?, version: Version? ->
+//                    val result =  "https://core-sat.maps.yandex.net/tiles?/l=map&x=10126&y=5883&z=14&lang=ru_RU&apikey=bba4f318-e183-4f6e-8124-c335f1abca8a"
+//                    Log.d("urlPeovider", result)
+//                    result
+//                }
+//
+//            UrlProvider { tileId: TileId?, version: Version? ->
+//                val result =  "https://sat04.maps.yandex.net/tiles?/l=map&x=${tileId?.x}&y=${tileId?.y}&z=${tileId?.z}"
+//                Log.d("urlPeovider", "$result   version = ${version?.str}")
+//                result
+//            }
 
+//            UrlProvider { tileId: TileId?, version: Version? ->
+//                val result =  "https://sat01.maps.yandex.net/tiles?l=sat&v=3.379.0&x=3255&y=235&z=13"
+//                Log.d("urlPeovider", "$result   version = ${version?.str}")
+//                result
+//            }
+
+//                UrlProvider { tileId: TileId?, version: Version? ->
+//                val result =  "https://core-sat.maps.yandex.net/tiles?/l=map&x=${tileId?.x}&y=${tileId?.y}&z=${tileId?.z}"
+//                Log.d("urlPeovider",  "$result  x= ${tileId?.x} y= ${tileId?.y}  z= ${tileId?.z}")
+//                result
+//            }
+
+//                UrlProvider { tileId: TileId?, version: Version? ->
+//                   val result = "https://core-sat.maps.yandex.net/tiles?/l=sat&${tileId?.x}&y=${tileId?.y}&z=${tileId?.z}&lang=ru_RU&apikey=bba4f318-e183-4f6e-8124-c335f1abca8a"
+//
+//                    Log.d("urlPeovider", result)
+//                result }
+
+//                UrlProvider { tileId: TileId?, version: Version? -> "https://core-sat.maps.yandex.net/tiles?l=sat&v=3.1079.0&x=10126&y=5883&z=14&lang=ru_RU&apikey=ea38fe74-ec10-4b11-a4a3-7eba140bfcc5" }
+
+//                UrlProvider { tileId: TileId?, version: Version? ->  "https://core-sat.maps.yandex.net/tiles?l=sat&v=3.1079.0&x=${tileId?.x}&y=${tileId?.y}&z=14&lang=ru_RU&apikey=bba4f318-e183-4f6e-8124-c335f1abca8a" }
 
 //                UrlProvider { tileId: TileId?, version: Version? ->
 //                    "https://api.mapbox.com/styles/v1/mapbox/dark-v11/static/pin-l-embassy+f74e4e(-74.0021,40.7338)/-74.0021,40.7338,16/500x300?" +
@@ -167,6 +200,9 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
                 Log.d("urlPeovider", result)
                 result }
 
+            val layer = LayerOptions()
+            layer.cacheable = true
+
             imageUrlProvider = DefaultImageUrlProvider()
             projection = Projections.getWgs84Mercator()
 
@@ -175,17 +211,18 @@ class BlankFragment : Fragment(), UserLocationObjectListener, GeoObjectTapListen
             val l = mapView.map.addLayer(
                 "mapkit_logo",
                 "image/png",
-                LayerOptions(),
+                layer,
                 urlProvider,
                 imageUrlProvider,
                 projection
             )
+
             l.invalidate("0.0.0")
             // TODO TILES
 
 
             mapView.map.move(
-                CameraPosition(TARGET_LOCATION, 16.0f, 0.0f, 45.0f)
+                CameraPosition(TARGET_LOCATION, 14.0f, 0.0f, 45.0f)
             )
 
             sublayerManager = mapView.map.sublayerManager
